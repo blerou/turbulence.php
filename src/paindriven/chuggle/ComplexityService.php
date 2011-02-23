@@ -2,9 +2,8 @@
 /**
  * This file is part of chuggle.php
  *
- * Copyright (c) 2011 Szabolcs Sulik <sulik.szabolcs@gmail.com>
- *
- * @license http://www.opensource.org/licenses/mit-license.php
+ * @copyright Copyright (c) 2011 Szabolcs Sulik <sulik.szabolcs@gmail.com>
+ * @license   http://www.opensource.org/licenses/mit-license.php
  */
 
 namespace paindriven\chuggle;
