@@ -8,8 +8,10 @@ if (empty($_SERVER['argv'][1]) || empty($_SERVER['argv'][2])) {
 $targetDir = realpath($_SERVER['argv'][1]);
 $repoDir   = realpath($_SERVER['argv'][2]).'/';
 
-set_include_path(get_include_path().PATH_SEPARATOR.__DIR__.'/../src/');
-
+$baseDir = __DIR__.'/../src/';
+if (realpath($baseDir)) {
+	set_include_path(get_include_path().PATH_SEPARATOR.$baseDir);
+}
 require 'paindriven/chuggle/Logger.php';
 require 'paindriven/chuggle/Collector.php';
 require 'paindriven/chuggle/ComplexityService.php';
