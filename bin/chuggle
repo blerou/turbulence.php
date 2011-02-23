@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 if (empty($_SERVER['argv'][1]) || empty($_SERVER['argv'][2])) {
@@ -7,19 +8,12 @@ if (empty($_SERVER['argv'][1]) || empty($_SERVER['argv'][2])) {
 $targetDir = realpath($_SERVER['argv'][1]);
 $repoDir   = realpath($_SERVER['argv'][2]).'/';
 
-spl_autoload_register(function($class) {
-	if (0 !== strpos($class, 'paindriven\\chuggle\\')) {
-		return false;
-	}
+set_include_path(get_include_path().PATH_SEPARATOR.__DIR__.'/../src/');
 
-	$file = sprintf('%s/src/%s.php', __DIR__, str_replace('\\', '/', $class));
-	if (file_exists($file)) {
-		require $file;
-		return true;
-	}
-
-	return false;
-});
+require 'paindriven/chuggle/Logger.php';
+require 'paindriven/chuggle/Collector.php';
+require 'paindriven/chuggle/ComplexityService.php';
+require 'paindriven/chuggle/ChangesService.php';
 
 use paindriven\chuggle\Logger;
 use paindriven\chuggle\Collector;
@@ -32,15 +26,12 @@ $result = new Collector();
 
 $complexity = new ComplexityService($logger, $targetDir, $repoDir);
 $result     = $complexity->calculate($result);
-
-$changes = new ChangesService($logger, $targetDir, $repoDir, $complexity->map());
-$result  = $changes->calculate($result);
+$changes    = new ChangesService($logger, $targetDir, $repoDir, $complexity->map());
+$result     = $changes->calculate($result);
 
 $logger->log('writing results...');
 $outFile = get_temp_dir($targetDir).'/out.json';
 $result->dumpJson($outFile);
-
-
 
 
 function get_temp_dir($targetDir) {
