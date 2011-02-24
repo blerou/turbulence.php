@@ -1,0 +1,11 @@
+<phpunit bootstrap="./bootstrap.php">
+    <testsuite name="chuggle.php Test Suite">
+        <directory>../</directory>
+    </testsuite>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../../src/</directory>
+        </whitelist>
+    </filter>
+</phpunit>
