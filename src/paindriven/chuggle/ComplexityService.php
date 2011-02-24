@@ -21,9 +21,9 @@ class ComplexityService
 	private $logger;
 
 	/**
-	 * @var string the target dir
+	 * @var string the subject dir
 	 */
-	private $targetDir;
+	private $subjectDir;
 
 	/**
 	 * @var string the repository base
@@ -31,17 +31,23 @@ class ComplexityService
 	private $repoDir;
 
 	/**
+	 * @var string the output dir
+	 */
+	private $outputDir;
+
+	/**
 	 * Constructor
 	 *
-	 * @param Logger $logger    the logger
-	 * @param string $targetDir the target directory
-	 * @param string $repoDir   the repository bsae
+	 * @param Logger $logger     the logger
+	 * @param string $subjectDir the target directory
+	 * @param string $repoDir    the repository bsae
 	 */
-	public function __construct(Logger $logger, $targetDir, $repoDir)
+	public function __construct(Logger $logger, $subjectDir, $repoDir, $outputDir)
 	{
-		$this->logger    = $logger;
-		$this->targetDir = $targetDir;
-		$this->repoDir   = $repoDir;
+		$this->logger     = $logger;
+		$this->subjectDir = $subjectDir;
+		$this->repoDir    = $repoDir;
+		$this->outputDir  = $outputDir;
 	}
 
 	/**
@@ -76,9 +82,9 @@ class ComplexityService
 
 	private function runPdepend()
 	{
-		$this->logFile = get_temp_dir($this->targetDir) . '/pdepend.log';
+		$this->logFile = $this->outputDir.'/pdepend.log';
 
-		exec(sprintf('pdepend --summary-xml=%s %s', $this->logFile, $this->targetDir));
+		exec(sprintf('pdepend --summary-xml=%s %s', $this->logFile, $this->subjectDir));
 	}
 
 	private function gatherFileClassMap()
@@ -86,7 +92,7 @@ class ComplexityService
 		$logXml = simplexml_load_file($this->logFile);
 		$this->map = array();
 		foreach ($logXml->package->class as $class) {
-			$file = str_replace($this->repoDir, '', $class->file['name']);
+			$file = str_replace($this->repoDir.'/', '', $class->file['name']);
 			$class = (string) $class['name'];
 
 			$this->map[$file] = $class;

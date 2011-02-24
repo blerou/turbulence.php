@@ -1,46 +1,66 @@
 #!/usr/bin/env php
 <?php
 
-if (empty($_SERVER['argv'][1]) || empty($_SERVER['argv'][2])) {
-  die(PHP_EOL.'Usage: php chuggle.php TARGET_DIR REPOSITORY_BASE_DIR'.PHP_EOL.PHP_EOL);
-}
-
-$targetDir = realpath($_SERVER['argv'][1]);
-$repoDir   = realpath($_SERVER['argv'][2]).'/';
-
 $baseDir = __DIR__.'/../src/';
 if (realpath($baseDir)) {
 	set_include_path(get_include_path().PATH_SEPARATOR.$baseDir);
 }
 require 'paindriven/chuggle/Logger.php';
 require 'paindriven/chuggle/Collector.php';
+require 'paindriven/chuggle/GitService.php';
 require 'paindriven/chuggle/ComplexityService.php';
 require 'paindriven/chuggle/ChangesService.php';
 
 use paindriven\chuggle\Logger;
 use paindriven\chuggle\Collector;
+use paindriven\chuggle\GitService;
 use paindriven\chuggle\ComplexityService;
 use paindriven\chuggle\ChangesService;
 
 
+$params = parse_params($_SERVER['argv']);
+
+$repoUrl    = $params['r'];
+$outputDir  = rtrim($params['o'], '/');
+$path       = isset($params['p']) ? ltrim($params['p'], '/') : '';
+$repoDir    = $outputDir.'/_repo';
+$subjectDir = $repoDir.'/'.$path;
+
 $logger = new Logger();
 $result = new Collector();
 
-$complexity = new ComplexityService($logger, $targetDir, $repoDir);
+$git = new GitService();
+$git->fetch($repoUrl, $repoDir);
+
+$complexity = new ComplexityService($logger, $subjectDir, $repoDir, $outputDir);
 $result     = $complexity->calculate($result);
-$changes    = new ChangesService($logger, $targetDir, $repoDir, $complexity->map());
+$changes    = new ChangesService($logger, $path, $repoDir, $complexity->map());
 $result     = $changes->calculate($result);
 
 $logger->log('writing results...');
-$outFile = get_temp_dir($targetDir).'/out.json';
+$outFile = $outputDir.'/out.json';
 $result->dumpJson($outFile);
 
 
-function get_temp_dir($targetDir) {
-  $tempDir   = '/tmp/'.preg_replace('/[^a-z0-9_-]/i', '_', $targetDir);
-  if (!is_dir($tempDir)) {
-    mkdir($tempDir);
-  }
+function parse_params($args)
+{
+	$params    = array();
+	$usageText = <<<EOB
 
-  return $tempDir;
+Usage: chuggle -rREPOSITORY_BASE_URL -oOUTPUT_DIR [-pPATH_IN_THE_REPO]
+
+
+EOB;
+	foreach (array_slice($args, 1) as $arg) {
+		if (!preg_match('/^-(r|p|o)(.+)$/', $arg, $match)) {
+			die($usageText);
+		}
+
+		$params[$match[1]] = $match[2];
+	}
+	if (!isset($params['r']) || !isset($params['o'])) {
+		die($usageText);
+	}
+
+	return $params;
 }

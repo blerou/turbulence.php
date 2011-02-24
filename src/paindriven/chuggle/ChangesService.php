@@ -61,7 +61,7 @@ class ChangesService
 		$this->logger->log('calculating changes...');
 
 		$this->logger->log('running git...');
-		$out = $this->retrieveGitChanges($this->targetDir, $this->repoDir);
+		$out = $this->retrieveGitChanges();
 
 		$this->logger->log('splitting changes...');
 		foreach ($out as $raw) {
@@ -78,11 +78,11 @@ class ChangesService
 	private function retrieveGitChanges()
 	{
 		$cwd = getcwd();
-		chdir($this->targetDir);
+		chdir($this->repoDir);
 
 		$gitCmd = sprintf(
 				'git log --all -M -C --name-only | grep "^%s.*\.php" | sort | uniq -c | sort | awk \'BEGIN {print "count,file"} {print $1 "," $2}\'',
-				ltrim(str_replace($this->repoDir, '', $this->targetDir), '/'), $this->targetDir
+				$this->targetDir
 		);
 		exec($gitCmd, $out);
 		chdir($cwd);
