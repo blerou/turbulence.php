@@ -33,7 +33,7 @@ class Collector
 		if (!isset($this->result[$class])) {
 			$this->result[$class] = array();
 		}
-		$this->result[$class][0] = $ac;
+		$this->result[$class][1] = $ac;
 	}
 
 	/**
@@ -49,7 +49,7 @@ class Collector
 		if (!isset($this->result[$class])) {
 			$this->result[$class] = array();
 		}
-		$this->result[$class][1] = $noc;
+		$this->result[$class][0] = $noc;
 	}
 
 	/**

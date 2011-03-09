@@ -1,15 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-$baseDir = __DIR__.'/../src/';
-if (realpath($baseDir)) {
-	set_include_path(get_include_path().PATH_SEPARATOR.$baseDir);
-}
-require 'paindriven/chuggle/Logger.php';
-require 'paindriven/chuggle/Collector.php';
-require 'paindriven/chuggle/GitService.php';
-require 'paindriven/chuggle/ComplexityService.php';
-require 'paindriven/chuggle/ChangesService.php';
+register_autoloader();
 
 use paindriven\chuggle\Logger;
 use paindriven\chuggle\Collector;
@@ -29,6 +21,7 @@ $subjectDir = $repoDir.'/'.$path;
 $logger = new Logger();
 $result = new Collector();
 
+$logger->log('cloning git repo...');
 $git = new GitService();
 $git->fetch($repoUrl, $repoDir);
 
@@ -42,8 +35,21 @@ $outFile = $outputDir.'/out.json';
 $result->dumpJson($outFile);
 
 
-function parse_params($args)
-{
+function register_autoloader() {
+	$baseDir = __DIR__.'/../src/';
+	if (realpath($baseDir)) {
+		set_include_path(get_include_path().PATH_SEPARATOR.$baseDir);
+	}
+	spl_autoload_register(function($class) {
+		if (0 === strpos($class, 'paindriven\\chuggle')) {
+			require_once str_replace('\\', '/', $class).'.php';
+			return class_exists($class, false) || interface_exists($class, false);
+		}
+		return false;
+	});
+}
+
+function parse_params($args) {
 	$params    = array();
 	$usageText = <<<EOB
 

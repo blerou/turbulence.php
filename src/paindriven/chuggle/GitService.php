@@ -18,6 +18,9 @@ class GitService
 {
 	public function fetch($url, $targetDir)
 	{
+		if (is_dir($targetDir)) {
+			`rm -fr {$targetDir}`;
+		}
 		`git clone {$url} {$targetDir}`;
 	}
 }
