@@ -27,9 +27,11 @@ if (!$scm->isRepo($repoDir))
 if (!is_dir($outputDir))
 	mkdir($outputDir);
 
-$complexity = new ComplexityService($logger, $subjectDir, $repoDir, $outputDir);
+$logger->log('calculating complexity...');
+$complexity = new ComplexityService($subjectDir, $repoDir, $outputDir);
 $result     = $complexity->calculate($result);
-$changes    = new ChangesService($scm, $logger, $path, $repoDir, $complexity->map());
+$logger->log('calculating changes...');
+$changes    = new ChangesService($scm, $path, $repoDir, $complexity->map());
 $result     = $changes->calculate($result);
 
 $logger->log('writing results...');

@@ -21,13 +21,10 @@ class ChangesService
 	private $scm;
 
 	/**
-	 * @var Logger the logger
-	 */
-	private $logger;
-	/**
 	 * @var string the target dir
 	 */
 	private $targetDir;
+
 	/**
 	 * @var string the repository base
 	 */
@@ -42,15 +39,13 @@ class ChangesService
 	 * Constructor
 	 *
 	 * @param object $scm       the scm service
-	 * @param Logger $logger    the logger
 	 * @param string $targetDir the target directory
 	 * @param string $repoDir   the repository bsae
 	 * @param array  $map       the file-class map
 	 */
-	function __construct($scm, Logger $logger, $targetDir, $repoDir, $map)
+	function __construct($scm, $targetDir, $repoDir, $map)
 	{
 		$this->scm       = $scm;
-		$this->logger    = $logger;
 		$this->targetDir = $targetDir;
 		$this->repoDir   = $repoDir;
 		$this->map       = $map;
@@ -65,12 +60,8 @@ class ChangesService
 	 */
 	function calculate(Collector $result)
 	{
-		$this->logger->log('calculating changes...');
-
-		$this->logger->log(' -> collect changes...');
 		$changes = $this->scm->changes($this->repoDir);
 
-		$this->logger->log(' -> process changes...');
 		foreach ($changes as $change) {
 			if (false === strpos($change, $this->targetDir))
 				continue;

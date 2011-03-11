@@ -16,11 +16,6 @@ namespace paindriven\chuggle;
 class ComplexityService
 {
 	/**
-	 * @var Logger the logger
-	 */
-	private $logger;
-
-	/**
 	 * @var string the subject dir
 	 */
 	private $subjectDir;
@@ -38,13 +33,12 @@ class ComplexityService
 	/**
 	 * Constructor
 	 *
-	 * @param Logger $logger     the logger
 	 * @param string $subjectDir the target directory
 	 * @param string $repoDir    the repository bsae
+	 * @param string $outputDir  the output dir
 	 */
-	public function __construct(Logger $logger, $subjectDir, $repoDir, $outputDir)
+	public function __construct($subjectDir, $repoDir, $outputDir)
 	{
-		$this->logger     = $logger;
 		$this->subjectDir = $subjectDir;
 		$this->repoDir    = $repoDir;
 		$this->outputDir  = $outputDir;
@@ -59,14 +53,9 @@ class ComplexityService
 	 */
 	public function calculate(Collector $result)
 	{
-		$this->logger->log('calculating complexity...');
-
-		$this->logger->log(' -> running PDepend...');
 		$this->runPdepend();
-		$this->logger->log(' -> gathering file-class maps...');
 		$this->gatherFileClassMap();
 
-		$this->logger->log(' -> process complexities...');
 		$logXml = simplexml_load_file($this->logFile);
 		foreach ($logXml->package as $package) {
 			foreach ($package->class as $class) {
@@ -86,7 +75,7 @@ class ComplexityService
 	{
 		$this->logFile = $this->outputDir.'/pdepend.log';
 
-		exec(sprintf('pdepend --summary-xml=%s %s', $this->logFile, $this->subjectDir));
+		`pdepend --summary-xml={$this->logFile} {$this->subjectDir}`;
 	}
 
 	private function gatherFileClassMap()
