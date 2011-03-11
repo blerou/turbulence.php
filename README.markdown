@@ -1,17 +1,24 @@
 Hopefully-meaningful Metrics
 ----------------------------
 
-This work based on [Turbulence](Based on https://github.com/chad/turbulence)
+This work based on [Turbulence](https://github.com/chad/turbulence)
 
 [A quick hack based on Michael Feathers' recent work](http://www.stickyminds.com/sitewide.asp?Function=edetail&ObjectType=COL&ObjectId=16679&tth=DYN&tt=siteemail&iDyn=2) in project churn and complexity
 
 Usage
 -----
 
+		bin/chuggle -r=/path/to/git/project -o=/tmp/output
+
+It takes `/path/to/git/project` repository, calculates churn and complexity, then create an out.json file under `/tmp/output`.
+
+		bin/chuggle -r=/path/to/git/project -o=/tmp/output -v
+
+When `-v` parameter presents it creates a "viewable" html reprezentation of the metrics under `/tmp/output/viewer.html`.
+
 		bin/chuggle -r=/path/to/git/project -o=/tmp/output -v=firefox
 
-it takes `/path/to/git/project` repository, calculates chunks and complexities and create an out.json file under `/tmp/output`, the creates a "viewable" html reprezentation of the metrics under `/tmp/output/viewer.html` and opens it by `firefox`.
-
+When `-v` parameter value setted it opens the `viewer.html` by `firefox` in this case.
 
 Dependencies
 ------------
