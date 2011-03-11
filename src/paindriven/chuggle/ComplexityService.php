@@ -61,20 +61,22 @@ class ComplexityService
 	{
 		$this->logger->log('calculating complexity...');
 
-		$this->logger->log('running PDepend...');
+		$this->logger->log(' -> running PDepend...');
 		$this->runPdepend();
-		$this->logger->log('gathering file-class maps...');
+		$this->logger->log(' -> gathering file-class maps...');
 		$this->gatherFileClassMap();
 
-		$this->logger->log('gathering complexities...');
+		$this->logger->log(' -> process complexities...');
 		$logXml = simplexml_load_file($this->logFile);
-		foreach ($logXml->package->class as $class) {
-			$nom = (int) $class['nom'];
-			$wmc = (int) $class['wmc'];
-			$ac = $nom ? $wmc / $nom : 0;
-			$class = (string) $class['name'];
+		foreach ($logXml->package as $package) {
+			foreach ($package->class as $class) {
+				$nom = (int) $class['nom'];
+				$wmc = (int) $class['wmc'];
+				$ac = $nom ? $wmc / $nom : 0;
+				$class = (string) $class['name'];
 
-			$result->complexity($class, $ac);
+				$result->complexity($class, $ac);
+			}
 		}
 
 		return $result;
