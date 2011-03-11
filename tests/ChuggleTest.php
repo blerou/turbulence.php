@@ -46,7 +46,7 @@ class ChuggleTest extends \PHPUnit_Framework_TestCase
 		$this->assertThat($jsonData, $this->isType('array'));
 		$this->assertArrayHasKey('ChangesService', $jsonData);
 		$this->assertArrayHasKey('ComplexityService', $jsonData);
-		$this->assertArrayHasKey('GitService', $jsonData);
+		$this->assertArrayHasKey('Git', $jsonData);
 		$this->assertArrayHasKey('Logger', $jsonData);
 		$this->assertArrayHasKey('Collector', $jsonData);
 	}

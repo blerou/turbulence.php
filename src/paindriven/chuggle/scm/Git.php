@@ -7,14 +7,14 @@
  * @license http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace paindriven\chuggle;
+namespace paindriven\chuggle\scm;
 
 /**
- * GitService class
+ * Git class
  *
  * @author blerou <sulik.szabolcs@gmail.com>
  */
-class GitService
+class Git
 {
 	public function fetch($url, $targetDir)
 	{
@@ -22,6 +22,16 @@ class GitService
 			`rm -fr {$targetDir}`;
 		}
 		`git clone {$url} {$targetDir}`;
+	}
+
+	public function changes($targetDir)
+	{
+		$cwd = getcwd();
+		chdir($targetDir);
+		$out = `git log --all -M -C --numstat --format="%n"`;
+		chdir($cwd);
+
+		return preg_split('/\\n/', $out);
 	}
 }
 

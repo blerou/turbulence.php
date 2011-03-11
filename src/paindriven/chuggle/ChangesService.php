@@ -16,6 +16,11 @@ namespace paindriven\chuggle;
 class ChangesService
 {
 	/**
+	 * @var object the scm service
+	 */
+	private $scm;
+
+	/**
 	 * @var Logger the logger
 	 */
 	private $logger;
@@ -36,13 +41,15 @@ class ChangesService
 	/**
 	 * Constructor
 	 *
+	 * @param object $scm       the scm service
 	 * @param Logger $logger    the logger
 	 * @param string $targetDir the target directory
 	 * @param string $repoDir   the repository bsae
 	 * @param array  $map       the file-class map
 	 */
-	function __construct(Logger $logger, $targetDir, $repoDir, $map)
+	function __construct($scm, Logger $logger, $targetDir, $repoDir, $map)
 	{
+		$this->scm       = $scm;
 		$this->logger    = $logger;
 		$this->targetDir = $targetDir;
 		$this->repoDir   = $repoDir;
@@ -61,7 +68,7 @@ class ChangesService
 		$this->logger->log('calculating changes...');
 
 		$this->logger->log(' -> collect changes...');
-		$changes = $this->retrieveGitChanges();
+		$changes = $this->scm->changes($this->repoDir);
 
 		$this->logger->log(' -> process changes...');
 		foreach ($changes as $change) {
@@ -73,16 +80,6 @@ class ChangesService
 		}
 
 		return $result;
-	}
-
-	private function retrieveGitChanges()
-	{
-		$cwd = getcwd();
-		chdir($this->repoDir);
-		$out = `git log --all -M -C --numstat --format="%n"`;
-		chdir($cwd);
-
-		return preg_split('/\\n/', $out);
 	}
 }
 
