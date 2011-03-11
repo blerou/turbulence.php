@@ -17,6 +17,7 @@ $outputDir  = rtrim($params['o'], '/');
 $path       = isset($params['p']) ? ltrim($params['p'], '/') : '';
 $repoDir    = $outputDir.'/_repo';
 $subjectDir = $repoDir.'/'.$path;
+$buildViewer = isset($params['v']);
 
 $logger = new Logger();
 $result = new Collector();
@@ -33,6 +34,18 @@ $result     = $changes->calculate($result);
 $logger->log('writing results...');
 $outFile = $outputDir.'/out.json';
 $result->dumpJson($outFile);
+
+if ($buildViewer) {
+	$viewerFile = $outputDir.'/viewer.html';
+	$templateDir = __DIR__.'/../viewer';
+	$viewer = file_get_contents($templateDir.'/viewer.template.html');
+	$viewer = strtr($viewer, array(
+		'<*jquery.min.js*>'  => file_get_contents($templateDir.'/jquery.min.js'),
+		'<*jquery.flot.js*>' => file_get_contents($templateDir.'/jquery.flot.js'),
+		'<*json*>'           => file_get_contents($outFile),
+	));
+	file_put_contents($viewerFile, $viewer);
+}
 
 
 function register_autoloader() {
@@ -53,12 +66,14 @@ function parse_params($args) {
 	$params    = array();
 	$usageText = <<<EOB
 
-Usage: chuggle -rREPOSITORY_BASE_URL -oOUTPUT_DIR [-pPATH_IN_THE_REPO]
+Usage: chuggle -r=REPOSITORY_BASE_URL -o=OUTPUT_DIR [-p=PATH_IN_THE_REPO] [-v]
 
+Hints:
+ -v : generate a viewer.html under OUTPUT_DIR to view result
 
 EOB;
 	foreach (array_slice($args, 1) as $arg) {
-		if (!preg_match('/^-(r|p|o)(.+)$/', $arg, $match)) {
+		if (!preg_match('/^-(r|p|o|v)=?(.*)$/', $arg, $match)) {
 			die($usageText);
 		}
 

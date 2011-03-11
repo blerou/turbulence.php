@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>php code metrics</title>
+		<script type="text/javascript"><*jquery.min.js*></script>
+    <script type="text/javascript"><*jquery.flot.js*></script>
+  </head>
+  <body>
+    <div id="turbulenceplot" style="width:600px;height:300px;border:1px 1px 1px 1px;"></div>
+
+    <script type="text/javascript">
+      (function($) {
+				var drawer = function(data) {
+					var inputData = [];
+					var inputLabels = [];
+					for (className in data) {
+						inputData.push(data[className]);
+						inputLabels.push(className);
+					}
+					var turbulencePlot = $("#turbulenceplot");
+					var data = [{ data: inputData, points: { show: true } }];
+					var options = {
+						xaxis: { min: 0 },
+						yaxis: { min: 0 },
+						grid: { hoverable: true, clickable: true }
+					};
+
+					$.plot(turbulencePlot, data, options);
+
+					var prevPoint = null;
+					turbulencePlot.bind("plotclick", function(event, pos, item) {
+						if (item)
+						if (prevPoint != item.datapoint) {
+							prevPoint = item.datapoint;
+							alert(inputLabels[item.dataIndex]);
+						} else {
+							prevPoint = null;
+						}
+					});
+				};
+
+				$(function() {
+					drawer(<*json*>);
+				});
+      })(jQuery);
+    </script>
+  </body>
+</html>
