@@ -8,48 +8,44 @@ use paindriven\chuggle\Collector;
 use paindriven\chuggle\scm\Git;
 use paindriven\chuggle\ComplexityService;
 use paindriven\chuggle\ChangesService;
+use paindriven\chuggle\PlotBuilder;
 
 
 $params = parse_params($_SERVER['argv']);
 
-$repoUrl    = $params['r'];
+$repoDir    = realpath($params['r']);
 $outputDir  = rtrim($params['o'], '/');
 $path       = $params['p'];
-$repoDir    = $outputDir.'/_repo';
 $subjectDir = $repoDir.'/'.$path;
-$buildViewer = isset($params['v']);
 
 $logger = new Logger();
 $result = new Collector();
+$scm    = new Git();
 
-$logger->log('cloning git repo...');
-$git = new Git();
-$git->fetch($repoUrl, $repoDir);
+if (!$scm->isRepo($repoDir))
+	die("\ninvalid repository: {$repoDir}\n\n");
+if (!is_dir($outputDir))
+	mkdir($outputDir);
 
 $complexity = new ComplexityService($logger, $subjectDir, $repoDir, $outputDir);
 $result     = $complexity->calculate($result);
-$changes    = new ChangesService($git, $logger, $path, $repoDir, $complexity->map());
+$changes    = new ChangesService($scm, $logger, $path, $repoDir, $complexity->map());
 $result     = $changes->calculate($result);
 
 $logger->log('writing results...');
 $outFile = $outputDir.'/out.json';
 $result->dumpJson($outFile);
 
+$buildViewer = isset($params['v']);
 if ($buildViewer) {
-	$viewerFile = $outputDir.'/viewer.html';
 	$templateDir = __DIR__.'/../viewer';
-	$viewer = file_get_contents($templateDir.'/viewer.template.html');
-	$viewer = strtr($viewer, array(
-		'<*jquery.min.js*>'  => file_get_contents($templateDir.'/jquery.min.js'),
-		'<*jquery.flot.js*>' => file_get_contents($templateDir.'/jquery.flot.js'),
-		'<*json*>'           => file_get_contents($outFile),
-	));
-	file_put_contents($viewerFile, $viewer);
+	$viewerFile  = $outputDir.'/viewer.html';
+	$builder     = new PlotBuilder();
+	$builder->buildViewer($outFile, $templateDir, $viewerFile);
 
 	$browser = $params['v'];
-	if ($browser) {
-		`{$browser} {$viewerFile}`;
-	}
+	if ($browser)
+		`{$browser} {$viewerFile} &`;
 }
 
 
@@ -71,7 +67,7 @@ function parse_params($args) {
 	$params    = array();
 	$usageText = <<<EOB
 
-Usage: chuggle -r=REPOSITORY_BASE_URL -o=OUTPUT_DIR [-p=PATH_IN_THE_REPO] [-v[=BROWSER_COMMAND]]
+Usage: chuggle -r=REPOSITORY_DIR -o=OUTPUT_DIR [-p=PATH_IN_THE_REPO] [-v[=BROWSER_COMMAND]]
 
 Hints:
  -v : generate a viewer.html under OUTPUT_DIR to view result. if BROWSER_COMMAND setted, it launch the browser

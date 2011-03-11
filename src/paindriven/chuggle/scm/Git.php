@@ -10,28 +10,44 @@
 namespace paindriven\chuggle\scm;
 
 /**
- * Git class
+ * Git related commands adapter class
  *
  * @author blerou <sulik.szabolcs@gmail.com>
  */
 class Git
 {
-	public function fetch($url, $targetDir)
-	{
-		if (is_dir($targetDir)) {
-			`rm -fr {$targetDir}`;
-		}
-		`git clone {$url} {$targetDir}`;
-	}
-
-	public function changes($targetDir)
+	/**
+	 * determines the given dir contains a valid git repo
+	 *
+	 * @param string $repoDir the repository dir
+	 *
+	 * @return bool
+	 */
+	public function isRepo($repoDir)
 	{
 		$cwd = getcwd();
-		chdir($targetDir);
-		$out = `git log --all -M -C --numstat --format="%n"`;
+		chdir($repoDir);
+		$out = `git status 2>&1`;
 		chdir($cwd);
 
-		return preg_split('/\\n/', $out);
+		return false === strpos($out, 'Not a git repository');
+	}
+
+	/**
+	 * retrieve changes from repository
+	 *
+	 * @param string $repoDir the repository dir
+	 *
+	 * @return array
+	 */
+	public function changes($repoDir)
+	{
+		$cwd = getcwd();
+		chdir($repoDir);
+		$out = preg_split('/\\n/', `git log --all -M -C --numstat --format="%n"`);
+		chdir($cwd);
+
+		return $out;
 	}
 }
 

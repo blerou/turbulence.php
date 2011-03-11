@@ -4,8 +4,8 @@ class ChuggleTest extends \PHPUnit_Framework_TestCase
 {
 	protected function setUp()
 	{
-		$this->repoUrl = 'file://'.realpath(__DIR__.'/../');
-		$this->path    = 'src/';
+		$this->repoUrl = realpath(__DIR__.'/../');
+		$this->path    = 'src';
 		$this->output  = '/tmp/_chuggle_test';
 	}
 
