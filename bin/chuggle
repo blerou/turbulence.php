@@ -14,7 +14,7 @@ $params = parse_params($_SERVER['argv']);
 
 $repoUrl    = $params['r'];
 $outputDir  = rtrim($params['o'], '/');
-$path       = isset($params['p']) ? ltrim($params['p'], '/') : '';
+$path       = $params['p'];
 $repoDir    = $outputDir.'/_repo';
 $subjectDir = $repoDir.'/'.$path;
 $buildViewer = isset($params['v']);
@@ -45,6 +45,11 @@ if ($buildViewer) {
 		'<*json*>'           => file_get_contents($outFile),
 	));
 	file_put_contents($viewerFile, $viewer);
+
+	$browser = $params['v'];
+	if ($browser) {
+		`{$browser} {$viewerFile}`;
+	}
 }
 
 
@@ -66,10 +71,10 @@ function parse_params($args) {
 	$params    = array();
 	$usageText = <<<EOB
 
-Usage: chuggle -r=REPOSITORY_BASE_URL -o=OUTPUT_DIR [-p=PATH_IN_THE_REPO] [-v]
+Usage: chuggle -r=REPOSITORY_BASE_URL -o=OUTPUT_DIR [-p=PATH_IN_THE_REPO] [-v[=BROWSER_COMMAND]]
 
 Hints:
- -v : generate a viewer.html under OUTPUT_DIR to view result
+ -v : generate a viewer.html under OUTPUT_DIR to view result. if BROWSER_COMMAND setted, it launch the browser
 
 EOB;
 	foreach (array_slice($args, 1) as $arg) {
@@ -82,6 +87,8 @@ EOB;
 	if (!isset($params['r']) || !isset($params['o'])) {
 		die($usageText);
 	}
+
+	$params['p'] = isset($params['p']) ? ltrim($params['p'], '/') : '';
 
 	return $params;
 }
