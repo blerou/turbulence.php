@@ -30,10 +30,7 @@ class Collector
 	 */
 	public function complexity($class, $ac)
 	{
-		if (!isset($this->result[$class])) {
-			$this->result[$class] = array();
-		}
-		$this->result[$class][1] = $ac;
+		$this->addToResult($class, 1, $ac);
 	}
 
 	/**
@@ -46,10 +43,15 @@ class Collector
 	 */
 	public function changes($class, $noc)
 	{
+		$this->addToResult($class, 0, $noc);
+	}
+
+	private function addToResult($class, $pos, $value)
+	{
 		if (!isset($this->result[$class])) {
-			$this->result[$class] = array();
+			$this->result[$class] = array(0, 0);
 		}
-		$this->result[$class][0] = $noc;
+		$this->result[$class][$pos] += $value;
 	}
 
 	/**

@@ -60,16 +60,16 @@ class ChangesService
 	{
 		$this->logger->log('calculating changes...');
 
-		$this->logger->log('running git...');
-		$out = $this->retrieveGitChanges();
+		$this->logger->log(' -> collect changes...');
+		$changes = $this->retrieveGitChanges();
 
-		$this->logger->log('splitting changes...');
-		foreach ($out as $raw) {
-			list($noc, $file) = explode(',', $raw);
-			if (!isset($this->map[$file])) {
+		$this->logger->log(' -> process changes...');
+		foreach ($changes as $change) {
+			if (false === strpos($change, $this->targetDir))
 				continue;
-			}
-			$result->changes($this->map[$file], (int) $noc);
+			list($added, $removed, $file) = preg_split('/\\t/', $change);
+			if (isset($this->map[$file]))
+				$result->changes($this->map[$file], $added+$removed);
 		}
 
 		return $result;
@@ -79,15 +79,10 @@ class ChangesService
 	{
 		$cwd = getcwd();
 		chdir($this->repoDir);
-
-		$gitCmd = sprintf(
-				'git log --all -M -C --name-only | grep "^%s.*\.php" | sort | uniq -c | sort | awk \'BEGIN {print "count,file"} {print $1 "," $2}\'',
-				$this->targetDir
-		);
-		exec($gitCmd, $out);
+		$out = `git log --all -M -C --numstat --format="%n"`;
 		chdir($cwd);
 
-		return $out;
+		return preg_split('/\\n/', $out);
 	}
 }
 
