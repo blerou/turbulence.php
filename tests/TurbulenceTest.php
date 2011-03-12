@@ -1,12 +1,12 @@
 <?php
 
-class ChuggleTest extends \PHPUnit_Framework_TestCase
+class TurbulenceTest extends \PHPUnit_Framework_TestCase
 {
 	protected function setUp()
 	{
 		$this->repoUrl = realpath(__DIR__.'/../');
 		$this->path    = 'src';
-		$this->output  = '/tmp/_chuggle_test';
+		$this->output  = '/tmp/_turbulence_test';
 	}
 
 	protected function tearDown()
@@ -19,15 +19,15 @@ class ChuggleTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function createsAndFillOutputDir()
 	{
-		$this->runChuggle();
+		$this->runTurbulence();
 		$this->assertTrue(is_dir($this->output));
 	}
 
-	private function runChuggle()
+	private function runTurbulence()
 	{
 		$cwd = getcwd();
 		chdir(__DIR__.'/..');
-		`bin/chuggle -r{$this->repoUrl} -p{$this->path} -o{$this->output}`;
+		`bin/turbulence -r{$this->repoUrl} -p{$this->path} -o{$this->output}`;
 		chdir($cwd);
 	}
 
@@ -36,7 +36,7 @@ class ChuggleTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function outputIsAValidJson()
 	{
-		$this->runChuggle();
+		$this->runTurbulence();
 
 		$jsonFile = $this->output.'/out.json';
 		$this->assertTrue(is_file($jsonFile));

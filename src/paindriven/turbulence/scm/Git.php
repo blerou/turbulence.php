@@ -1,13 +1,13 @@
 <?php
 /**
- * This file is part of chuggle.php
+ * This file is part of turbulence.php
  *
  * Copyright (c) 2011 Szabolcs Sulik <sulik.szabolcs@gmail.com>
  *
  * @license http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace paindriven\chuggle\scm;
+namespace paindriven\turbulence\scm;
 
 /**
  * Git related commands adapter class

@@ -3,12 +3,12 @@
 
 register_autoloader();
 
-use paindriven\chuggle\Logger;
-use paindriven\chuggle\Collector;
-use paindriven\chuggle\scm\Git;
-use paindriven\chuggle\ComplexityService;
-use paindriven\chuggle\ChangesService;
-use paindriven\chuggle\PlotBuilder;
+use paindriven\turbulence\Logger;
+use paindriven\turbulence\Collector;
+use paindriven\turbulence\scm\Git;
+use paindriven\turbulence\ComplexityService;
+use paindriven\turbulence\ChangesService;
+use paindriven\turbulence\PlotBuilder;
 
 
 $params = parse_params($_SERVER['argv']);
@@ -57,7 +57,7 @@ function register_autoloader() {
 		set_include_path(get_include_path().PATH_SEPARATOR.$baseDir);
 	}
 	spl_autoload_register(function($class) {
-		if (0 === strpos($class, 'paindriven\\chuggle')) {
+		if (0 === strpos($class, 'paindriven\\turbulence')) {
 			require_once str_replace('\\', '/', $class).'.php';
 			return class_exists($class, false) || interface_exists($class, false);
 		}
@@ -69,7 +69,7 @@ function parse_params($args) {
 	$params    = array();
 	$usageText = <<<EOB
 
-Usage: chuggle -r=REPOSITORY_DIR -o=OUTPUT_DIR [-p=PATH_IN_THE_REPO] [-v[=BROWSER_COMMAND]]
+Usage: turbulence -r=REPOSITORY_DIR -o=OUTPUT_DIR [-p=PATH_IN_THE_REPO] [-v[=BROWSER_COMMAND]]
 
 Hints:
  -v : generate a viewer.html under OUTPUT_DIR to view result. if BROWSER_COMMAND setted, it launch the browser

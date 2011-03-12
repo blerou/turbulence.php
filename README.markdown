@@ -8,15 +8,15 @@ This work based on [Turbulence](https://github.com/chad/turbulence)
 Usage
 -----
 
-		bin/chuggle -r=/path/to/git/project -o=/tmp/output
+		bin/turbulence -r=/path/to/git/project -o=/tmp/output
 
 It takes `/path/to/git/project` repository, calculates churn and complexity, then create an out.json file under `/tmp/output`.
 
-		bin/chuggle -r=/path/to/git/project -o=/tmp/output -v
+		bin/turbulence -r=/path/to/git/project -o=/tmp/output -v
 
 When `-v` parameter presents it creates a "viewable" html reprezentation of the metrics under `/tmp/output/viewer.html`.
 
-		bin/chuggle -r=/path/to/git/project -o=/tmp/output -v=firefox
+		bin/turbulence -r=/path/to/git/project -o=/tmp/output -v=firefox
 
 When `-v` parameter value setted it opens the `viewer.html` by `firefox` in this case.
 
