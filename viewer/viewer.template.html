@@ -1,48 +1,57 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>php code metrics</title>
-		<script type="text/javascript"><*jquery.min.js*></script>
-    <script type="text/javascript"><*jquery.flot.js*></script>
-  </head>
-  <body>
-    <div id="turbulenceplot" style="width:600px;height:300px;border:1px 1px 1px 1px;"></div>
+<head>
+	<title>php code metrics</title>
+	<script type="text/javascript"><*jquery.min.js*></script>
+	<script type="text/javascript"><*jquery.flot.js*></script>
+</head>
+<body>
+	<div id="avgmethodplot" style="width:1000px;height:300px;border:1px 1px 1px 1px;"></div>
+	<div id="maxmethodplot" style="width:1000px;height:300px;border:1px 1px 1px 1px;"></div>
 
-    <script type="text/javascript">
-      (function($) {
-				var drawer = function(data) {
-					var inputData = [];
-					var inputLabels = [];
-					for (className in data) {
-						inputData.push(data[className]);
-						inputLabels.push(className);
-					}
-					var turbulencePlot = $("#turbulenceplot");
-					var data = [{ data: inputData, points: { show: true } }];
-					var options = {
-						xaxis: { min: 0 },
-						yaxis: { min: 0 },
-						grid: { hoverable: true, clickable: true }
-					};
+	<script type="text/javascript">
+	(function($) {
+		var prevPoint = {};
+		var createPlot = function(id, data, labels) {
+			var plotHolder = $(id);
+			var data = [{ data: data, points: { show: true } }];
+			var options = {
+				xaxis: { min: 0 },
+				yaxis: { min: 0 },
+				grid: { hoverable: true, clickable: true }
+			};
 
-					$.plot(turbulencePlot, data, options);
+			$.plot(plotHolder, data, options);
 
-					var prevPoint = null;
-					turbulencePlot.bind("plotclick", function(event, pos, item) {
-						if (item)
-						if (prevPoint != item.datapoint) {
-							prevPoint = item.datapoint;
-							alert(inputLabels[item.dataIndex]);
-						} else {
-							prevPoint = null;
-						}
-					});
-				};
+			prevPoint[id] = null;
+			plotHolder.bind("plotclick", function(event, pos, item) {
+				if (item)
+				if (prevPoint[id] != item.datapoint) {
+					prevPoint[id] = item.datapoint;
+					alert(labels[item.dataIndex]);
+				} else {
+					prevPoint[id] = null;
+				}
+			});
+		};
+		var drawer = function(data) {
+			var inputAvg = [];
+			var inputMax = [];
+			var inputLabels = [];
+			for (className in data) {
+				inputAvg.push([data[className][0], data[className][1]]);
+				inputMax.push([data[className][0], data[className][2]]);
+				inputLabels.push(className);
+			}
 
-				$(function() {
-					drawer(<*json*>);
-				});
-      })(jQuery);
-    </script>
-  </body>
+			createPlot("#avgmethodplot", inputAvg, inputLabels);
+			createPlot("#maxmethodplot", inputMax, inputLabels);
+		};
+
+		$(function() {
+			drawer(<*json*>);
+		});
+	})(jQuery);
+	</script>
+</body>
 </html>

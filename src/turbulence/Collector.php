@@ -28,9 +28,16 @@ class Collector
 	 *
 	 * @return void
 	 */
-	public function complexity($class, $ac)
+	public function averageMethodComplexity($class, $ac)
 	{
-		$this->addToResult($class, 1, $ac);
+		$this->prepareClass($class);
+		$this->result[$class][1] = $ac;
+	}
+
+	public function lagestMethodComplexity($class, $complexity)
+	{
+		$this->prepareClass($class);
+		$this->result[$class][2] = max($this->result[$class][2], $complexity);
 	}
 
 	/**
@@ -43,15 +50,15 @@ class Collector
 	 */
 	public function changes($class, $noc)
 	{
-		$this->addToResult($class, 0, $noc);
+		$this->prepareClass($class);
+		$this->result[$class][0] += $noc;
 	}
 
-	private function addToResult($class, $pos, $value)
+	private function prepareClass($class)
 	{
 		if (!isset($this->result[$class])) {
-			$this->result[$class] = array(0, 0);
+			$this->result[$class] = array(0, 0, 0);
 		}
-		$this->result[$class][$pos] += $value;
 	}
 
 	/**

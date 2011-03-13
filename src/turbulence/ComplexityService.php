@@ -61,10 +61,14 @@ class ComplexityService
 			foreach ($package->class as $class) {
 				$nom = (int) $class['nom'];
 				$wmc = (int) $class['wmc'];
-				$ac = $nom ? $wmc / $nom : 0;
-				$class = (string) $class['name'];
+				$ac  = $nom ? $wmc / $nom : 0;
+				$className = (string) $class['name'];
 
-				$result->complexity($class, $ac);
+				$result->averageMethodComplexity($className, $ac);
+
+				foreach ($class->method as $method) {
+					$result->lagestMethodComplexity($className, (int) $method['ccn']);
+				}
 			}
 		}
 
