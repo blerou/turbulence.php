@@ -7,7 +7,7 @@
  * @license http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace paindriven\turbulence\scm;
+namespace turbulence\scm;
 
 /**
  * Git related commands adapter class

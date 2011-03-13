@@ -6,7 +6,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace paindriven\turbulence;
+namespace turbulence;
 
 /**
  * ComplexityService class

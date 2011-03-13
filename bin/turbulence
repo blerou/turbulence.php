@@ -3,12 +3,12 @@
 
 register_autoloader();
 
-use paindriven\turbulence\Logger;
-use paindriven\turbulence\Collector;
-use paindriven\turbulence\scm\Git;
-use paindriven\turbulence\ComplexityService;
-use paindriven\turbulence\ChangesService;
-use paindriven\turbulence\PlotBuilder;
+use turbulence\Logger;
+use turbulence\Collector;
+use turbulence\scm\Git;
+use turbulence\ComplexityService;
+use turbulence\ChangesService;
+use turbulence\PlotBuilder;
 
 
 $params = parse_params($_SERVER['argv']);
@@ -57,7 +57,7 @@ function register_autoloader() {
 		set_include_path(get_include_path().PATH_SEPARATOR.$baseDir);
 	}
 	spl_autoload_register(function($class) {
-		if (0 === strpos($class, 'paindriven\\turbulence')) {
+		if (0 === strpos($class, 'turbulence')) {
 			require_once str_replace('\\', '/', $class).'.php';
 			return class_exists($class, false) || interface_exists($class, false);
 		}
