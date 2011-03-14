@@ -17,16 +17,29 @@ namespace turbulence\scm;
 class Git
 {
 	/**
-	 * determines the given dir contains a valid git repo
+	 * @var string the repository dir
+	 */
+	private $repoDir;
+
+	/**
+	 * Constructor
 	 *
 	 * @param string $repoDir the repository dir
+	 */
+	public function __construct($repoDir)
+	{
+		$this->repoDir = $repoDir;
+	}
+
+	/**
+	 * determines the given dir contains a valid git repo
 	 *
 	 * @return bool
 	 */
-	public function isRepo($repoDir)
+	public function isRepo()
 	{
 		$cwd = getcwd();
-		chdir($repoDir);
+		chdir($this->repoDir);
 		$out = `git status 2>&1`;
 		chdir($cwd);
 
@@ -36,14 +49,12 @@ class Git
 	/**
 	 * retrieve changes from repository
 	 *
-	 * @param string $repoDir the repository dir
-	 *
 	 * @return array
 	 */
-	public function changes($repoDir)
+	public function changes()
 	{
 		$cwd = getcwd();
-		chdir($repoDir);
+		chdir($this->repoDir);
 		$out = preg_split('/\\n/', `git log --all -M -C --numstat --format="%n"`);
 		chdir($cwd);
 

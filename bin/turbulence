@@ -20,18 +20,18 @@ $subjectDir = $repoDir.'/'.$path;
 
 $logger = new Logger();
 $result = new Collector();
-$scm    = new Git();
+$scm    = new Git($repoDir);
 
-if (!$scm->isRepo($repoDir))
+if (!$scm->isRepo())
 	die("\ninvalid repository: {$repoDir}\n\n");
 if (!is_dir($outputDir))
 	mkdir($outputDir);
 
 $logger->log('calculating complexity...');
-$complexity = new ComplexityService($subjectDir, $repoDir, $outputDir);
+$complexity = new ComplexityService($subjectDir, $repoDir);
 $result     = $complexity->calculate($result);
 $logger->log('calculating changes...');
-$changes    = new ChangesService($scm, $path, $repoDir);
+$changes    = new ChangesService($scm, $path);
 $result     = $changes->calculate($result);
 
 $logger->log('writing results...');

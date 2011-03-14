@@ -16,7 +16,7 @@ namespace turbulence;
 class ChangesService
 {
 	/**
-	 * @var object the scm service
+	 * @var Git the scm service
 	 */
 	private $scm;
 
@@ -26,22 +26,15 @@ class ChangesService
 	private $targetDir;
 
 	/**
-	 * @var string the repository base
-	 */
-	private $repoDir;
-
-	/**
 	 * Constructor
 	 *
-	 * @param object $scm       the scm service
+	 * @param Git    $scm       the scm service
 	 * @param string $targetDir the target directory
-	 * @param string $repoDir   the repository bsae
 	 */
-	function __construct($scm, $targetDir, $repoDir)
+	function __construct($scm, $targetDir)
 	{
 		$this->scm       = $scm;
 		$this->targetDir = $targetDir;
-		$this->repoDir   = $repoDir;
 	}
 
 	/**
@@ -53,7 +46,7 @@ class ChangesService
 	 */
 	function calculate(Collector $result)
 	{
-		$changes = $this->scm->changes($this->repoDir);
+		$changes = $this->scm->changes();
 
 		foreach ($changes as $change) {
 			if (false === strpos($change, $this->targetDir))

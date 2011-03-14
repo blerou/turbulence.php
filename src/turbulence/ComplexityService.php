@@ -26,22 +26,15 @@ class ComplexityService
 	private $repoDir;
 
 	/**
-	 * @var string the output dir
-	 */
-	private $outputDir;
-
-	/**
 	 * Constructor
 	 *
 	 * @param string $subjectDir the target directory
 	 * @param string $repoDir    the repository bsae
-	 * @param string $outputDir  the output dir
 	 */
-	public function __construct($subjectDir, $repoDir, $outputDir)
+	public function __construct($subjectDir, $repoDir)
 	{
 		$this->subjectDir = $subjectDir;
 		$this->repoDir    = $repoDir;
-		$this->outputDir  = $outputDir;
 	}
 
 	/**
@@ -79,7 +72,7 @@ class ComplexityService
 
 	private function createPdependXml()
 	{
-		$logFile = $this->outputDir.'/pdepend.log';
+		$logFile = tempnam(sys_get_temp_dir(), 'pdepend_');
 
 		`pdepend --summary-xml={$logFile} {$this->subjectDir}`;
 

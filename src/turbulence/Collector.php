@@ -21,6 +21,11 @@ class Collector
 	private $result = array();
 
 	/**
+	 * @var array filename - classname map
+	 */
+	private $map = array();
+
+	/**
 	 * adds complexity to given class
 	 *
 	 * @param string $class the class name
