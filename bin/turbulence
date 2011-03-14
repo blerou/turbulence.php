@@ -16,7 +16,6 @@ $params = parse_params($_SERVER['argv']);
 $repoDir    = realpath($params['repo']);
 $outputDir  = rtrim($params['out'], '/');
 $path       = $params['path'];
-$subjectDir = $repoDir.'/'.$path;
 
 $logger = new Logger();
 $result = new Collector();
@@ -28,7 +27,7 @@ if (!is_dir($outputDir))
 	mkdir($outputDir);
 
 $logger->log('calculating complexity...');
-$complexity = new ComplexityService($subjectDir, $repoDir);
+$complexity = new ComplexityService($repoDir, $path);
 $result     = $complexity->calculate($result);
 $logger->log('calculating changes...');
 $changes    = new ChangesService($scm, $path);

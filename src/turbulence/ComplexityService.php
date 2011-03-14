@@ -18,7 +18,7 @@ class ComplexityService
 	/**
 	 * @var string the subject dir
 	 */
-	private $subjectDir;
+	private $path;
 
 	/**
 	 * @var string the repository base
@@ -28,13 +28,13 @@ class ComplexityService
 	/**
 	 * Constructor
 	 *
-	 * @param string $subjectDir the target directory
-	 * @param string $repoDir    the repository bsae
+	 * @param string $repoDir the repository bsae
+	 * @param string $path    the target directory
 	 */
-	public function __construct($subjectDir, $repoDir)
+	public function __construct($repoDir, $path)
 	{
-		$this->subjectDir = $subjectDir;
-		$this->repoDir    = $repoDir;
+		$this->repoDir = $repoDir;
+		$this->path    = $path;
 	}
 
 	/**
@@ -74,7 +74,7 @@ class ComplexityService
 	{
 		$logFile = tempnam(sys_get_temp_dir(), 'pdepend_');
 
-		`pdepend --summary-xml={$logFile} {$this->subjectDir}`;
+		`pdepend --summary-xml={$logFile} {$this->repoDir}/{$this->path}`;
 
 		return simplexml_load_file($logFile);
 	}
