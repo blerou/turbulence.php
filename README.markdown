@@ -16,7 +16,7 @@ It takes `/path/to/git/project` repository, calculates class/file changes and so
 
 When `-path` parameter presents only files (classes) under `src/` will be calculated.
 
-If everything went well a `viewer.html` will be generated under output (`/tmp/output`). It has no external dependency, so just launch it in your favorite browser.
+If everything went well a `viewer.html` will be generated under output (`/tmp/output`). It has no external dependency, so just launch it with your favorite browser.
 
 		google-chrome /tmp/output/viewer.html
 
