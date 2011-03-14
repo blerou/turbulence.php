@@ -53,16 +53,18 @@ class ComplexityService
 	 */
 	public function calculate(Collector $result)
 	{
-		$this->runPdepend();
-		$this->gatherFileClassMap();
+		$logXml = $this->createPdependXml();
 
-		$logXml = simplexml_load_file($this->logFile);
 		foreach ($logXml->package as $package) {
 			foreach ($package->class as $class) {
+				$fileName  = str_replace($this->repoDir.'/', '', $class->file['name']);
+				$className = (string) $class['name'];
+
+				$result->classMap($fileName, $className);
+
 				$nom = (int) $class['nom'];
 				$wmc = (int) $class['wmc'];
 				$ac  = $nom ? $wmc / $nom : 0;
-				$className = (string) $class['name'];
 
 				$result->averageMethodComplexity($className, $ac);
 
@@ -75,33 +77,13 @@ class ComplexityService
 		return $result;
 	}
 
-	private function runPdepend()
+	private function createPdependXml()
 	{
-		$this->logFile = $this->outputDir.'/pdepend.log';
+		$logFile = $this->outputDir.'/pdepend.log';
 
-		`pdepend --summary-xml={$this->logFile} {$this->subjectDir}`;
-	}
+		`pdepend --summary-xml={$logFile} {$this->subjectDir}`;
 
-	private function gatherFileClassMap()
-	{
-		$logXml = simplexml_load_file($this->logFile);
-		$this->map = array();
-		foreach ($logXml->package->class as $class) {
-			$file = str_replace($this->repoDir.'/', '', $class->file['name']);
-			$class = (string) $class['name'];
-
-			$this->map[$file] = $class;
-		}
-	}
-
-	/**
-	 * provides file-class map
-	 *
-	 * @return array
-	 */
-	public function map()
-	{
-		return $this->map;
+		return simplexml_load_file($logFile);
 	}
 }
 

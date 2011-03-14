@@ -27,7 +27,7 @@ class TurbulenceTest extends \PHPUnit_Framework_TestCase
 	{
 		$cwd = getcwd();
 		chdir(__DIR__.'/..');
-		`bin/turbulence -r{$this->repoUrl} -p{$this->path} -o{$this->output}`;
+		`bin/turbulence -r={$this->repoUrl} -p={$this->path} -o={$this->output}`;
 		chdir($cwd);
 	}
 

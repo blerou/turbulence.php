@@ -43,15 +43,19 @@ class Collector
 	/**
 	 * adds complexity to given class
 	 *
-	 * @param string $class the class name
-	 * @param int    $noc   number of changes
+	 * @param string $fileName the file name
+	 * @param int    $noc      number of changes
 	 *
 	 * @return void
 	 */
-	public function changes($class, $noc)
+	public function changes($fileName, $noc)
 	{
-		$this->prepareClass($class);
-		$this->result[$class][0] += $noc;
+		if (!isset($this->map[$fileName]))
+			return;
+
+		$className = $this->map[$fileName];
+		$this->prepareClass($className);
+		$this->result[$className][0] += $noc;
 	}
 
 	private function prepareClass($class)
@@ -59,6 +63,11 @@ class Collector
 		if (!isset($this->result[$class])) {
 			$this->result[$class] = array(0, 0, 0);
 		}
+	}
+
+	public function classMap($fileName, $className)
+	{
+		$this->map[$fileName] = $className;
 	}
 
 	/**

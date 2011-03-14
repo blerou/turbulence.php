@@ -31,7 +31,7 @@ $logger->log('calculating complexity...');
 $complexity = new ComplexityService($subjectDir, $repoDir, $outputDir);
 $result     = $complexity->calculate($result);
 $logger->log('calculating changes...');
-$changes    = new ChangesService($scm, $path, $repoDir, $complexity->map());
+$changes    = new ChangesService($scm, $path, $repoDir);
 $result     = $changes->calculate($result);
 
 $logger->log('writing results...');

@@ -31,24 +31,17 @@ class ChangesService
 	private $repoDir;
 
 	/**
-	 * @var array the file-class map
-	 */
-	private $map;
-
-	/**
 	 * Constructor
 	 *
 	 * @param object $scm       the scm service
 	 * @param string $targetDir the target directory
 	 * @param string $repoDir   the repository bsae
-	 * @param array  $map       the file-class map
 	 */
-	function __construct($scm, $targetDir, $repoDir, $map)
+	function __construct($scm, $targetDir, $repoDir)
 	{
 		$this->scm       = $scm;
 		$this->targetDir = $targetDir;
 		$this->repoDir   = $repoDir;
-		$this->map       = $map;
 	}
 
 	/**
@@ -65,9 +58,8 @@ class ChangesService
 		foreach ($changes as $change) {
 			if (false === strpos($change, $this->targetDir))
 				continue;
-			list($added, $removed, $file) = preg_split('/\\t/', $change);
-			if (isset($this->map[$file]))
-				$result->changes($this->map[$file], $added+$removed);
+			list($added, $removed, $fileName) = preg_split('/\\t/', $change);
+			$result->changes($fileName, $added+$removed);
 		}
 
 		return $result;
