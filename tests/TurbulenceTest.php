@@ -20,14 +20,14 @@ class TurbulenceTest extends \PHPUnit_Framework_TestCase
 	public function createsAndFillOutputDir()
 	{
 		$this->runTurbulence();
-		$this->assertTrue(is_dir($this->output));
+		$this->assertTrue(is_dir($this->output), $this->out);
 	}
 
 	private function runTurbulence()
 	{
 		$cwd = getcwd();
 		chdir(__DIR__.'/..');
-		`bin/turbulence -r={$this->repoUrl} -p={$this->path} -o={$this->output}`;
+		$this->out = `bin/turbulence -repo={$this->repoUrl} -path={$this->path} -out={$this->output}`;
 		chdir($cwd);
 	}
 
@@ -44,8 +44,8 @@ class TurbulenceTest extends \PHPUnit_Framework_TestCase
 		$json = file_get_contents($this->output.'/out.json');
 		$jsonData = json_decode($json, true);
 		$this->assertThat($jsonData, $this->isType('array'));
-		$this->assertArrayHasKey('ChangesService', $jsonData);
-		$this->assertArrayHasKey('ComplexityService', $jsonData);
+		$this->assertArrayHasKey('Changes', $jsonData);
+		$this->assertArrayHasKey('Complexity', $jsonData);
 		$this->assertArrayHasKey('Git', $jsonData);
 		$this->assertArrayHasKey('Logger', $jsonData);
 		$this->assertArrayHasKey('Collector', $jsonData);
