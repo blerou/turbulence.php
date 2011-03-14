@@ -86,6 +86,11 @@ class Collector
 	{
 		file_put_contents($file, json_encode($this->result));
 	}
+
+	public function dumpJsonWith($plot)
+	{
+		$plot->build(json_encode($this->result));
+	}
 }
 
 ?>

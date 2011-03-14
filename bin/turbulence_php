@@ -37,9 +37,10 @@ $logger->log('writing results...');
 $outFile = $outputDir.'/out.json';
 $result->dumpJson($outFile);
 
-$viewerFile = $outputDir.'/viewer.html';
-$builder    = new PlotBuilder();
-$builder->buildViewer($outFile, $viewerFile);
+$viewerFile  = $outputDir.'/viewer.html';
+$plotBuilder = new PlotBuilder($viewerFile);
+$result->dumpJsonWith($plotBuilder);
+
 
 
 function register_autoloader() {
