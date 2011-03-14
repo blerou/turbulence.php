@@ -14,7 +14,7 @@ It takes `/path/to/git/project` repository, calculates churn and complexity, the
 
 		bin/turbulence -repo=/path/to/git/project -out=/tmp/output -path=src
 
-When `-path` parameter presents only files (classes) under `path` will be calculated.
+When `-path` parameter presents only files (classes) under `src/` will be calculated.
 
 Dependencies
 ------------
