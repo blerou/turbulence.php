@@ -6,8 +6,8 @@ register_autoloader();
 use turbulence\Logger;
 use turbulence\Collector;
 use turbulence\scm\Git;
-use turbulence\ComplexityService;
-use turbulence\ChangesService;
+use turbulence\calculator\Complexity;
+use turbulence\calculator\Changes;
 use turbulence\PlotBuilder;
 
 
@@ -27,10 +27,10 @@ if (!is_dir($outputDir))
 	mkdir($outputDir);
 
 $logger->log('calculating complexity...');
-$complexity = new ComplexityService($repoDir, $path);
+$complexity = new Complexity($repoDir, $path);
 $result     = $complexity->calculate($result);
 $logger->log('calculating changes...');
-$changes    = new ChangesService($scm, $path);
+$changes    = new Changes($scm, $path);
 $result     = $changes->calculate($result);
 
 $logger->log('writing results...');

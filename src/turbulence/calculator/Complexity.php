@@ -6,14 +6,16 @@
  * @license   http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace turbulence;
+namespace turbulence\calculator;
+
+use turbulence\Collector;
 
 /**
- * ComplexityService class
+ * Complexity class
  *
  * @author blerou <sulik.szabolcs@gmail.com>
  */
-class ComplexityService
+class Complexity
 {
 	/**
 	 * @var string the subject dir

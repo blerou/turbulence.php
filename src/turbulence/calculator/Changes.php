@@ -6,14 +6,16 @@
  * @license   http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace turbulence;
+namespace turbulence\calculator;
+
+use turbulence\Collector;
 
 /**
- * ChangesService class
+ * Changes class
  *
  * @author blerou <sulik.szabolcs@gmail.com>
  */
-class ChangesService
+class Changes
 {
 	/**
 	 * @var Git the scm service
