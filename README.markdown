@@ -8,11 +8,11 @@ This work based on [Turbulence](https://github.com/chad/turbulence)
 Usage
 -----
 
-		bin/turbulence -repo=/path/to/git/project -out=/tmp/output
+		bin/turbulence_php -repo=/path/to/git/project -out=/tmp/output
 
 It takes `/path/to/git/project` repository, calculates class/file changes and some kind of complexities, then create an out.json file under `/tmp/output` (it contains the raw data in JSON format).
 
-		bin/turbulence -repo=/path/to/git/project -out=/tmp/output -path=src
+		bin/turbulence_php -repo=/path/to/git/project -out=/tmp/output -path=src
 
 When `-path` parameter presents only files (classes) under `src/` will be calculated.
 
