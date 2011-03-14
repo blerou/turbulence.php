@@ -10,13 +10,15 @@ Usage
 
 		bin/turbulence -repo=/path/to/git/project -out=/tmp/output
 
-It takes `/path/to/git/project` repository, calculates churn and complexity, then create an out.json file under `/tmp/output`.
+It takes `/path/to/git/project` repository, calculates class/file changes and some kind of complexities, then create an out.json file under `/tmp/output` (it contains the raw data in JSON format).
 
 		bin/turbulence -repo=/path/to/git/project -out=/tmp/output -path=src
 
 When `-path` parameter presents only files (classes) under `src/` will be calculated.
 
-If everything went well a `viewer.html` will be generated under output (`/tmp/output`).
+If everything went well a `viewer.html` will be generated under output (`/tmp/output`). It has no external dependency, so just launch it in your favorite browser.
+
+		google-chrome /tmp/output/viewer.html
 
 Dependencies
 ------------
