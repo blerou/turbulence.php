@@ -15,13 +15,13 @@ namespace turbulence;
  */
 class PlotBuilder
 {
-	public function buildViewer($outFile, $templateDir, $viewerFile)
+	public function buildViewer($outFile, $viewerFile)
 	{
-		$viewer = file_get_contents($templateDir.'/viewer.template.html');
-		$viewer = strtr($viewer, array(
-			'<*jquery.min.js*>'  => file_get_contents($templateDir.'/jquery.min.js'),
-			'<*jquery.flot.js*>' => file_get_contents($templateDir.'/jquery.flot.js'),
-			'<*json*>'           => file_get_contents($outFile),
+		$templateDir = __DIR__.'/template';
+		$viewer      = file_get_contents($templateDir.'/viewer.template');
+		$viewer      = strtr($viewer, array(
+			'<*jq.js*>' => file_get_contents($templateDir.'/jq.js'),
+			'<*json*>'  => file_get_contents($outFile),
 		));
 		file_put_contents($viewerFile, $viewer);
 	}

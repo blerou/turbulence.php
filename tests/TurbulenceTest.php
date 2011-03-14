@@ -41,6 +41,10 @@ class TurbulenceTest extends \PHPUnit_Framework_TestCase
 		$jsonFile = $this->output.'/out.json';
 		$this->assertTrue(is_file($jsonFile), $this->out);
 
+		$viewer = $this->output.'/viewer.html';
+		$this->assertTrue(is_file($viewer), $this->out);
+
+
 		$json = file_get_contents($this->output.'/out.json');
 		$jsonData = json_decode($json, true);
 		$this->assertThat($jsonData, $this->isType('array'));

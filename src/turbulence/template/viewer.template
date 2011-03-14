@@ -2,8 +2,7 @@
 <html>
 <head>
 	<title>php code metrics</title>
-	<script type="text/javascript"><*jquery.min.js*></script>
-	<script type="text/javascript"><*jquery.flot.js*></script>
+	<script type="text/javascript"><*jq.js*></script>
 </head>
 <body>
 	<div id="avgmethodplot" style="width:1000px;height:300px;border:1px 1px 1px 1px;"></div>
