@@ -16,6 +16,8 @@ It takes `/path/to/git/project` repository, calculates churn and complexity, the
 
 When `-path` parameter presents only files (classes) under `src/` will be calculated.
 
+If everything went well a `viewer.html` will be generated under output (`/tmp/output`).
+
 Dependencies
 ------------
 
