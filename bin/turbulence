@@ -13,9 +13,9 @@ use turbulence\PlotBuilder;
 
 $params = parse_params($_SERVER['argv']);
 
-$repoDir    = realpath($params['r']);
-$outputDir  = rtrim($params['o'], '/');
-$path       = $params['p'];
+$repoDir    = realpath($params['repo']);
+$outputDir  = rtrim($params['out'], '/');
+$path       = $params['path'];
 $subjectDir = $repoDir.'/'.$path;
 
 $logger = new Logger();
@@ -38,17 +38,10 @@ $logger->log('writing results...');
 $outFile = $outputDir.'/out.json';
 $result->dumpJson($outFile);
 
-$buildViewer = isset($params['v']);
-if ($buildViewer) {
-	$templateDir = __DIR__.'/../viewer';
-	$viewerFile  = $outputDir.'/viewer.html';
-	$builder     = new PlotBuilder();
-	$builder->buildViewer($outFile, $templateDir, $viewerFile);
-
-	$browser = $params['v'];
-	if ($browser)
-		`{$browser} {$viewerFile} &`;
-}
+$templateDir = __DIR__.'/../viewer';
+$viewerFile  = $outputDir.'/viewer.html';
+$builder     = new PlotBuilder();
+$builder->buildViewer($outFile, $templateDir, $viewerFile);
 
 
 function register_autoloader() {
@@ -69,24 +62,22 @@ function parse_params($args) {
 	$params    = array();
 	$usageText = <<<EOB
 
-Usage: turbulence -r=REPOSITORY_DIR -o=OUTPUT_DIR [-p=PATH_IN_THE_REPO] [-v[=BROWSER_COMMAND]]
+Usage: turbulence -repo=REPOSITORY_DIR -out=OUTPUT_DIR [-path=PATH_IN_THE_REPO]
 
-Hints:
- -v : generate a viewer.html under OUTPUT_DIR to view result. if BROWSER_COMMAND setted, it launch the browser
 
 EOB;
 	foreach (array_slice($args, 1) as $arg) {
-		if (!preg_match('/^-(r|p|o|v)=?(.*)$/', $arg, $match)) {
+		if (!preg_match('/^-(repo|path|out)=?(.*)$/', $arg, $match)) {
 			die($usageText);
 		}
 
 		$params[$match[1]] = $match[2];
 	}
-	if (!isset($params['r']) || !isset($params['o'])) {
+	if (!isset($params['repo']) || !isset($params['out'])) {
 		die($usageText);
 	}
 
-	$params['p'] = isset($params['p']) ? ltrim($params['p'], '/') : '';
+	$params['path'] = isset($params['path']) ? ltrim($params['path'], '/') : '';
 
 	return $params;
 }
