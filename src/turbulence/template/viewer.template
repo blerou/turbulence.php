@@ -5,14 +5,23 @@
 	<script type="text/javascript"><*jq.js*></script>
 </head>
 <body>
-	<div id="avgmethodplot" style="width:1000px;height:300px;border:1px 1px 1px 1px;"></div>
-	<div id="maxmethodplot" style="width:1000px;height:300px;border:1px 1px 1px 1px;"></div>
+	<div id="avgmethodplot">
+		<p>Changes / Average method complexity</p>
+	</div>
+	<div id="maxmethodplot">
+		<p>Changes / Max method complexity</p>
+	</div>
 
 	<script type="text/javascript">
 	(function($) {
+		var createPlotHolder = function(container) {
+			var plot = $('<div style="width:1000px;height:300px;border:1px 1px 1px 1px;"></div>');
+			plot.appendTo($(container));
+			return plot;
+		};
 		var prevPoint = {};
-		var createPlot = function(id, data, labels) {
-			var plotHolder = $(id);
+		var createPlot = function(plotHolder, data, labels) {
+			var id = plotHolder.parent().attr('id');
 			var data = [{ data: data, points: { show: true } }];
 			var options = {
 				xaxis: { min: 0 },
@@ -43,8 +52,8 @@
 				inputLabels.push(className);
 			}
 
-			createPlot("#avgmethodplot", inputAvg, inputLabels);
-			createPlot("#maxmethodplot", inputMax, inputLabels);
+			createPlot(createPlotHolder('#avgmethodplot'), inputAvg, inputLabels);
+			createPlot(createPlotHolder('#maxmethodplot'), inputMax, inputLabels);
 		};
 
 		$(function() {
