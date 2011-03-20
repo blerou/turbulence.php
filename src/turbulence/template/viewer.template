@@ -6,10 +6,10 @@
 </head>
 <body>
 	<div id="avgmethodplot">
-		<p>Changes / Average method complexity</p>
+		<p>Churn / Complexity (avg)</p>
 	</div>
 	<div id="maxmethodplot">
-		<p>Changes / Max method complexity</p>
+		<p>Churn / Complexity (max)</p>
 	</div>
 
 	<script type="text/javascript">
@@ -20,8 +20,8 @@
 			return plot;
 		};
 		var prevPoint = {};
-		var createPlot = function(plotHolder, data, labels) {
-			var id = plotHolder.parent().attr('id');
+		var createPlot = function(id, data, labels) {
+			var plotHolder = createPlotHolder(id);
 			var data = [{ data: data, points: { show: true } }];
 			var options = {
 				xaxis: { min: 0 },
@@ -52,8 +52,8 @@
 				inputLabels.push(className);
 			}
 
-			createPlot(createPlotHolder('#avgmethodplot'), inputAvg, inputLabels);
-			createPlot(createPlotHolder('#maxmethodplot'), inputMax, inputLabels);
+			createPlot('#avgmethodplot', inputAvg, inputLabels);
+			createPlot('#maxmethodplot', inputMax, inputLabels);
 		};
 
 		$(function() {
