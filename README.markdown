@@ -14,11 +14,23 @@ It takes `/path/to/git/project` repository, calculates class/file changes and so
 
 		bin/turbulence_php -repo=/path/to/git/project -out=/tmp/output -path=src
 
-When `-path` parameter presents only files (classes) under `src/` will be calculated.
+When `-path` parameter presents only files (classes) under `src/` will be processed.
 
 If everything went well a `viewer.html` will be generated under output (`/tmp/output`). It has no external dependency, so just launch it with your favorite browser.
 
 		google-chrome /tmp/output/viewer.html
+
+Example
+-------
+
+Let's create the metrics of Twig template engine:
+
+		pear install pear.pdepend.org/PHP_Depend-beta
+		git clone git://github.com/blerou/turbulence.php.git
+		git clone git://github.com/fabpot/Twig.git
+		turbulence.php/bin/turbulence_php -repo=Twig -out=/tmp/Twig -path=lib
+		google-chrome /tmp/Twig/viewer.html
+
 
 Dependencies
 ------------
